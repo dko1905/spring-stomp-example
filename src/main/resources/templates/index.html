@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Home</title>
+    <script src="https://unpkg.com/htmx.org@2.0.2"></script>
+    <script defer type="module">
+      import { Client } from "https://ga.jspm.io/npm:@stomp/stompjs@7.0.0/esm6/index.js";
+
+      const wsDiv = document.getElementById("wsDiv");
+
+      console.debug("Creating STOMP client")
+
+      const client = new Client({
+        brokerURL: "/stomp",
+        connectionTimeout: 1500,
+        onConnect: () => {
+          console.debug("Connected to STOMP server")
+          client.subscribe("/topic/greetings", (message) => {
+            console.log(`Received greeting: ${message.body}`);
+            const li = document.createElement("li");
+            li.innerText = message.body;
+            wsDiv.append(li);
+          });
+        },
+      });
+
+      client.debug(console.debug)
+
+      client.activate();
+    </script>
+  </head>
+  <body>
+    <h1>Home</h1>
+
+    <div style="border: thin orange solid">
+      <p><span style="font-weight: bold"> Websocket data </span> <br /></p>
+      <ul id="wsDiv"></ul>
+    </div>
+    <div style="border: thin orange solid">
+      <p>
+        <span style="font-weight: bold"> Server side controller data </span>
+        <br />
+        Refresh site to load. <br />
+
+        Date: <th:block th:text="${date}" /> <br />
+        Len: <th:block th:text="${#lists.size(allEvents)}" /> <br />
+        <button hx-post="/clear">clear</button>
+      </p>
+      <ul>
+        <li th:each="row,rowStat : ${allEvents}">
+          ID=<th:block th:text="${row.id}" /> Greeting from
+          <th:block th:text="${row.nameFrom}" /> to
+          <th:block th:text="${row.nameTo}" />
+        </li>
+      </ul>
+    </div>
+  </body>
+</html>
