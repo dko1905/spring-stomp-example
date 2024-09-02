@@ -21,7 +21,7 @@ public class GreetingGenerator implements DisposableBean, Runnable {
 
 	GreetingGenerator() {
 		this.thread = new Thread(this);
-		this.thread.setName("g-gen"); // Greeting generator
+		this.thread.setName("greeting-generator"); // Greeting generator
 		this.thread.start();
 		this.random = new Random();
 	}

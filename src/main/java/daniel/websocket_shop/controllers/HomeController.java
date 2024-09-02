@@ -1,12 +1,11 @@
 package daniel.websocket_shop.controllers;
 
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,24 +19,23 @@ public class HomeController {
 	@Autowired
 	GreetingEventService s;
 
-	// @ModelAttribute("allEvents")
-	// public List<SoldEvent> allEvents() {
-	// 	return s.getAllEvents();
-	// }
+	@ModelAttribute("date")
+	public String modelDate() {
+		return DateTimeFormatter.RFC_1123_DATE_TIME.format(Instant.now().atZone(ZoneId.systemDefault()));
+	}
 
 	@RequestMapping("/")
 	public ModelAndView showHome() {
 		var m = new ModelAndView();
 
-		m.addObject("allEvents", s.getAllEvents());
-		m.addObject("date", Instant.now().toString());
+		m.addObject("allEvents", s.getEventHistory());
 		m.setViewName("index");
 
 		return m;
 	} 
 
 	@RequestMapping(path = "/clear", method = RequestMethod.POST)
-	public ResponseEntity clearEvents() {
+	public ResponseEntity<String> clearEvents() {
 		s.clearAll();
 
 		return ResponseEntity.ok()

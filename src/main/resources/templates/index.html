@@ -10,23 +10,26 @@
 
       const wsDiv = document.getElementById("wsDiv");
 
-      console.debug("Creating STOMP client")
+      console.debug("Creating STOMP client");
 
       const client = new Client({
         brokerURL: "/stomp",
         connectionTimeout: 1500,
         onConnect: () => {
-          console.debug("Connected to STOMP server")
+          console.debug("Connected to STOMP server");
           client.subscribe("/topic/greetings", (message) => {
             console.log(`Received greeting: ${message.body}`);
             const li = document.createElement("li");
             li.innerText = message.body;
-            wsDiv.append(li);
+            wsDiv.insertBefore(li, wsDiv.firstChild);
+            if (wsDiv.childElementCount > 15) {
+              wsDiv.removeChild(wsDiv.lastChild);
+            }
           });
         },
       });
 
-      client.debug(console.debug)
+      client.debug(console.debug);
 
       client.activate();
     </script>
