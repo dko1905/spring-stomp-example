@@ -5,12 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Home</title>
     <script src="https://unpkg.com/htmx.org@2.0.2"></script>
-    <script defer type="module">
+    <script defer type="module" th:inline="javascript">
       import { Client } from "https://ga.jspm.io/npm:@stomp/stompjs@7.0.0/esm6/index.js";
 
       const wsDiv = document.getElementById("wsDiv");
 
       console.debug("Creating STOMP client");
+
+      const initialEvents = /*[[${allEvents}]]*/ ["none"];
+
+      function addEvent(body) {
+            const li = document.createElement("li");
+            li.innerText = body;
+            wsDiv.insertBefore(li, wsDiv.firstChild);
+            if (wsDiv.childElementCount > 15) {
+              wsDiv.removeChild(wsDiv.lastChild);
+            }
+      }
+
+      for (const e of initialEvents) {
+        addEvent(JSON.stringify(e))
+      }
 
       const client = new Client({
         brokerURL: "/stomp",
@@ -18,13 +33,8 @@
         onConnect: () => {
           console.debug("Connected to STOMP server");
           client.subscribe("/topic/greetings", (message) => {
+            addEvent(message.body)
             console.log(`Received greeting: ${message.body}`);
-            const li = document.createElement("li");
-            li.innerText = message.body;
-            wsDiv.insertBefore(li, wsDiv.firstChild);
-            if (wsDiv.childElementCount > 15) {
-              wsDiv.removeChild(wsDiv.lastChild);
-            }
           });
         },
       });
