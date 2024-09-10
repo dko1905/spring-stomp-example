@@ -7,7 +7,7 @@ import com.yeliheng.eventbus.spring.EventBusAutoRegister;
 import com.yeliheng.eventbus.spring.context.EventBusContext;
 
 @Configuration
-public class EventBusConfiguration {
+public class EventBusConfig {
 
 	@Bean(name = "eventBusContext")
 	public EventBusContext eventBusContext() {

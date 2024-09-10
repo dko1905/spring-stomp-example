@@ -13,10 +13,10 @@ import daniel.websocket_shop.domain.GreetingEvent;
 
 @Component
 public class GreetingGenerator implements DisposableBean, Runnable {
-	Logger logger = LoggerFactory.getLogger(GreetingGenerator.class); 
+	Logger logger = LoggerFactory.getLogger(GreetingGenerator.class);
 	Thread thread;
 	volatile boolean isRunning = true;
-	static final String[] NAMES = {"James", "Michael", "Robert", "John", "David", "William"};
+	static final String[] NAMES = { "James", "Michael", "Robert", "John", "David", "William" };
 	Random random;
 
 	GreetingGenerator() {
@@ -37,9 +37,9 @@ public class GreetingGenerator implements DisposableBean, Runnable {
 			String nameTo = NAMES[random.nextInt(NAMES.length)];
 			GreetingEvent ev = new GreetingEvent(counter, nameFrom, nameTo);
 			EventBus.post(ev);
-			
+
 			counter += 1;
-			
+
 			try {
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {

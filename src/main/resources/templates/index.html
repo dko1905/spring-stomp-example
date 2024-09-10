@@ -4,9 +4,9 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Home</title>
-    <script src="https://unpkg.com/htmx.org@2.0.2"></script>
+    <script th:src="@{/js/htmx.2.0.2.min.js}"></script>
     <script defer type="module" th:inline="javascript">
-      import { Client } from "https://ga.jspm.io/npm:@stomp/stompjs@7.0.0/esm6/index.js";
+      import { Client } from "/js/stompjs.7.0.0.min.js";
 
       const wsDiv = document.getElementById("wsDiv");
 
@@ -15,16 +15,16 @@
       const initialEvents = /*[[${allEvents}]]*/ ["none"];
 
       function addEvent(body) {
-            const li = document.createElement("li");
-            li.innerText = body;
-            wsDiv.insertBefore(li, wsDiv.firstChild);
-            if (wsDiv.childElementCount > 15) {
-              wsDiv.removeChild(wsDiv.lastChild);
-            }
+        const li = document.createElement("li");
+        li.innerText = body;
+        wsDiv.insertBefore(li, wsDiv.firstChild);
+        if (wsDiv.childElementCount > 15) {
+          wsDiv.removeChild(wsDiv.lastChild);
+        }
       }
 
       for (const e of initialEvents) {
-        addEvent(JSON.stringify(e))
+        addEvent(JSON.stringify(e));
       }
 
       const client = new Client({
@@ -33,13 +33,14 @@
         onConnect: () => {
           console.debug("Connected to STOMP server");
           client.subscribe("/topic/greetings", (message) => {
-            addEvent(message.body)
-            console.log(`Received greeting: ${message.body}`);
+            addEvent(message.body);
+            console.debug(`Received greeting: ${message.body}`);
           });
         },
       });
 
-      client.debug(console.debug);
+      console.log("STOMP Client:");
+      console.log(client);
 
       client.activate();
     </script>
