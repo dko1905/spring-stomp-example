@@ -12,7 +12,7 @@
 
       console.debug("Creating STOMP client");
 
-      const initialEvents = /*[[${allEvents}]]*/ ["none"];
+      const initialEvents = [];
 
       function addEvent(body) {
         const li = document.createElement("li");
@@ -51,24 +51,6 @@
     <div style="border: thin orange solid">
       <p><span style="font-weight: bold"> Websocket data </span> <br /></p>
       <ul id="wsDiv"></ul>
-    </div>
-    <div style="border: thin orange solid">
-      <p>
-        <span style="font-weight: bold"> Server side controller data </span>
-        <br />
-        Refresh site to load. <br />
-
-        Date: <th:block th:text="${date}" /> <br />
-        Len: <th:block th:text="${#lists.size(allEvents)}" /> <br />
-        <button hx-post="/clear">clear</button>
-      </p>
-      <ul>
-        <li th:each="row,rowStat : ${allEvents}">
-          ID=<th:block th:text="${row.id}" /> Greeting from
-          <th:block th:text="${row.nameFrom}" /> to
-          <th:block th:text="${row.nameTo}" />
-        </li>
-      </ul>
     </div>
   </body>
 </html>
